@@ -4,4 +4,8 @@
   gather_facts: true
   become: true
   roles:
-    - { role: disk, when: "ansible_facts['os_family'] == 'RedHat'", disk_storage_device: /dev/sda, disk_mount_path: /var/lib/persistent }
+    - role: disk
+      when: ansible_facts['os_family'] == 'RedHat'
+      vars:
+        disk_storage_device: /dev/sda
+        disk_mount_path: /var/lib/persistent
