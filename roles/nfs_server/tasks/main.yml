@@ -14,8 +14,11 @@
 - name: Configure NFS exports
   ansible.builtin.lineinfile:
     path: /etc/exports
-    line: "{{ nfs_server_share_path }} *(rw,sync,no_root_squash)"
+    line: "{{ nfs_server_share_path }} *(rw,sync,no_root_squash,no_subtree_check)"
     state: present
+
+- name: Export NFS shares
+  command: exportfs -a
 
 - name: Start and enable NFS services
   ansible.builtin.systemd:
