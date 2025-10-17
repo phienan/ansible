@@ -1,0 +1,24 @@
+---
+# NFS Server
+- name: Install NFS utilities
+  ansible.builtin.package:
+    name: nfs-utils
+    state: present
+
+- name: Create NFS export directory
+  ansible.builtin.file:
+    path: "{{ nfs_server_share_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Configure NFS exports
+  ansible.builtin.lineinfile:
+    path: /etc/exports
+    line: "{{ nfs_server_share_path }} *(rw,sync,no_root_squash)"
+    state: present
+
+- name: Start and enable NFS services
+  ansible.builtin.systemd:
+    name: nfs-server
+    state: started
+    enabled: true

@@ -1,0 +1,26 @@
+---
+- name: Install NFS utilities on client
+  ansible.builtin.package:
+    name: nfs-utils
+    state: present
+
+- name: Create mount point on client
+  ansible.builtin.file:
+    path: "{{ nfs_client_mount_path }}"
+    state: directory
+    owner: "{{ nfs_client_user_id }}"
+    group: "{{ nfs_client_group_id }}"
+    mode: '0755'
+
+- name: Mount NFS share
+  ansible.posix.mount:
+    path: "{{ nfs_client_mount_path }}"
+    src: "{{ ansible_host }}:{{ nfs_client_share_path }}"
+    fstype: nfs
+    state: mounted
+
+- name: Ensure NFS share mounts on boot
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ ansible_host }}:{{ nfs_client_share_path }} {{ nfs_client_mount_path }} nfs defaults 0 0"
+    state: present

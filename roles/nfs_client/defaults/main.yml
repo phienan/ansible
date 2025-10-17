@@ -1,0 +1,5 @@
+---
+nfs_client_share_path:
+nfs_client_mount_path:
+nfs_client_user_id: 65534
+nfs_client_group_id: 65534

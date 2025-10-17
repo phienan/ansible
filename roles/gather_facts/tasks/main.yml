@@ -1,0 +1,7 @@
+---
+- name: Gather Facts
+  setup:
+
+- name: Display gathered facts
+  debug:
+    var: ansible_facts

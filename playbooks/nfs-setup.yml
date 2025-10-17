@@ -1,11 +1,11 @@
 ---
 - name: Create a new partition on /dev/sda
-  hosts: all
+  hosts: linux
   gather_facts: true
   become: true
   roles:
-    - role: disk
-      when: ansible_facts['os_family'] == 'RedHat'
-      vars:
-        disk_storage_device: /dev/sda
-        disk_mount_path: /var/lib/persistent
+    # Enable gather_facts role only when needed
+    # - { role: gather_facts }
+    - { role: disk, when: "ansible_facts['os_family'] == 'RedHat'", disk_storage_device: /dev/sda, disk_mount_path: /var/lib/persistent }
+    - { role: nfs_server, when: "ansible_facts['os_family'] == 'RedHat' and inventory_hostname in groups['server']", nfs_server_share_path: /var/lib/persistent, nfs_server_mount_path: /mnt/persistent }
+    - { role: nfs_client, when: "ansible_facts['os_family'] == 'RedHat' and inventory_hostname in groups['client']", nfs_client_share_path: /var/lib/persistent, nfs_client_mount_path: /mnt/persistent }
