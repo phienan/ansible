@@ -1,0 +1,19 @@
+---
+linux:
+  hosts:
+    legion5:
+      ansible_host: 10.0.0.67
+    dell7400:
+      ansible_host: 10.0.0.85
+ms_windows:
+  hosts:
+    surface7:
+      ansible_host: 10.0.0.23
+    thao_lenovo:
+      ansible_host: 10.0.0.17
+    shape_tle2:
+      ansible_host: 10.0.0.12
+
+workstations_all:
+  linux:
+  ms_windows:

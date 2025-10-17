@@ -1,0 +1,39 @@
+---
+- name: Create a partition on new disk
+  community.general.parted:
+    device: "{{ disk_storage_device }}"
+    number: "{{ disk_partition_number }}"
+    state: present
+    part_type: primary
+    part_start: 0%
+    part_end: 100%
+    unit: GB
+
+- name: Format the new partition as xfs
+  community.general.filesystem:
+    fstype: xfs
+    dev: "{{ disk_storage_device }}{{ disk_partition_number }}"
+    force: true
+    state: present
+
+- name: Create mount point
+  ansible.builtin.file:
+    path: "{{ disk_mount_path }}"
+    state: directory
+    owner: "{{ disk_user_id }}"
+    group: "{{ disk_group_id }}"
+    mode: '0755'
+
+- name: Mount the partition
+  ansible.posix.mount:
+    path: "{{ disk_mount_path }}"
+    src: "{{ disk_storage_device }}{{ disk_partition_number }}"
+    fstype: xfs
+    state: mounted
+
+- name: Ensure the mount is persistent
+  ansible.posix.mount:
+    path: "{{ disk_mount_path }}"
+    src: "{{ disk_storage_device }}{{ disk_partition_number }}"
+    fstype: xfs
+    state: present
